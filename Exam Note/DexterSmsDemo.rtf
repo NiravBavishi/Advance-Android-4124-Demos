@@ -1,0 +1,193 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1561\cocoasubrtf400
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fnil\fcharset0 Menlo-Regular;\f2\fnil\fcharset0 Menlo-Italic;
+}
+{\colortbl;\red255\green255\blue255;\red255\green255\blue255;\red153\green168\blue186;\red88\green118\blue71;
+\red86\green132\blue173;\red133\green96\blue154;\red191\green100\blue38;\red109\green109\blue109;\red225\green179\blue88;
+\red172\green172\blue172;\red173\green169\blue32;\red254\green187\blue91;}
+{\*\expandedcolortbl;;\cssrgb\c100000\c100000\c100000;\csgenericrgb\c60000\c65882\c72941;\csgenericrgb\c34510\c46275\c27843;
+\csgenericrgb\c33725\c51765\c67843;\csgenericrgb\c52157\c37647\c60392;\csgenericrgb\c74902\c39216\c14902;\csgenericrgb\c42745\c42745\c42745;\csgenericrgb\c88235\c70196\c34510;
+\csgenericrgb\c67451\c67451\c67451;\csgenericrgb\c67843\c66275\c12549;\csgenericrgb\c99608\c73333\c35686;}
+\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 \cb2 Version change in gradel App File : \
+\
+[\
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f1\fs30 \cf3 apply \cf4 plugin\cf3 : \cf4 'com.android.application'\
+\
+\cf3 android \{\
+    compileSdkVersion \cf5 25\
+    \cf3 defaultConfig \{\
+        applicationId \cf4 "com.example.niravbavishi.dexterdemosms"\
+        \cf3 minSdkVersion \cf5 21\
+        \cf3 targetSdkVersion \cf5 25\
+        \cf3 versionCode \cf5 1\
+        \cf3 versionName \cf4 "1.0"\
+        \cf3 testInstrumentationRunner \cf4 "android.support.test.runner.AndroidJUnitRunner"\
+    \cf3 \}\
+    buildTypes \{\
+        release \{\
+            \cf6 minifyEnabled \cf7 false\
+            \cf6 proguardFiles \cf3 getDefaultProguardFile(\cf4 'proguard-android.txt'\cf3 ), \cf4 'proguard-rules.pro'\
+        \cf3 \}\
+    \}\
+\}\
+\
+dependencies \{\
+    implementation fileTree(\cf4 dir\cf3 : \cf4 'libs'\cf3 , \cf4 include\cf3 : [\cf4 '*.jar'\cf3 ])\
+    \cf8 //noinspection GradleCompatible\
+    \cf3 implementation \cf4 'com.android.support:appcompat-v7:25.3.1'\
+    \cf3 implementation \cf4 'com.android.support.constraint:constraint-layout:1.1.0'\
+    \cf3 testImplementation \cf4 'junit:junit:4.12'\
+    \cf3 androidTestImplementation \cf4 'com.android.support.test:runner:1.0.1'\
+    \cf3 androidTestImplementation \cf4 'com.android.support.test.espresso:espresso-core:3.0.1'\
+    \cf3 implementation \cf4 'com.karumi:dexter:4.2.0'\
+\cf3 \}\
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 \
+\
+]\
+\
+\
+Add permission auto manifest file \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1\fs30 \cf9 <uses-permission \cf6 android\cf10 :name=\cf4 "android.permission.SEND_SMS"\cf9 />\
+\
+\
+\
+Code\
+\cf7 package \cf3 com.example.niravbavishi.dexterdemosms\cf7 ;\
+\
+import \cf3 android.Manifest\cf7 ;\
+import \cf3 android.support.v7.app.AppCompatActivity\cf7 ;\
+import \cf3 android.os.Bundle\cf7 ;\
+import \cf3 android.util.Log\cf7 ;\
+import \cf3 android.view.View\cf7 ;\
+import \cf3 android.widget.Button\cf7 ;\
+import \cf3 android.widget.EditText\cf7 ;\
+import \cf3 android.widget.TextView\cf7 ;\
+\
+import \cf3 android.telephony.SmsManager\cf7 ;\
+\
+import \cf3 com.karumi.dexter.Dexter\cf7 ;\
+import \cf3 com.karumi.dexter.PermissionToken\cf7 ;\
+import \cf3 com.karumi.dexter.listener.PermissionDeniedResponse\cf7 ;\
+import \cf3 com.karumi.dexter.listener.PermissionGrantedResponse\cf7 ;\
+import \cf3 com.karumi.dexter.listener.PermissionRequest\cf7 ;\
+import \cf3 com.karumi.dexter.listener.single.PermissionListener\cf7 ;\
+\
+public class \cf3 MainActivity \cf7 extends \cf3 AppCompatActivity \{\
+\
+\
+    \cf7 private \cf3 EditText \cf6 edtPhoneNumber\cf7 , \cf6 edtMessageText\cf7 ;\
+    private \cf3 Button \cf6 btnSend\cf7 ;\
+    private \cf3 TextView \cf6 txtViewStatus\cf7 ;\
+\
+    private \cf3 PermissionListener \cf6 sendSMSPermissionListener\cf7 ;\
+\
+\
+    \cf11 @Override\
+    \cf7 protected void \cf12 onCreate\cf3 (Bundle savedInstanceState) \{\
+        \cf7 super\cf3 .onCreate(savedInstanceState)\cf7 ;\
+        \cf3 setContentView(R.layout.
+\f2\i \cf6 activity_main
+\f1\i0 \cf3 )\cf7 ;\
+\
+\
+        \cf6 edtPhoneNumber \cf3 = (EditText) findViewById(R.id.
+\f2\i \cf6 edtPhoneNumber
+\f1\i0 \cf3 )\cf7 ;\
+        \cf6 edtMessageText \cf3 = (EditText) findViewById(R.id.
+\f2\i \cf6 edtMessageText
+\f1\i0 \cf3 )\cf7 ;\
+        \cf6 btnSend \cf3 = (Button) findViewById(R.id.
+\f2\i \cf6 btnSendText
+\f1\i0 \cf3 )\cf7 ;\
+        \cf6 txtViewStatus \cf3 = (TextView) findViewById(R.id.
+\f2\i \cf6 txtViewStatus
+\f1\i0 \cf3 )\cf7 ;\
+\
+\
+        \cf3 createPermissionListner()\cf7 ;\
+\
+        \cf6 btnSend\cf3 .setOnClickListener(\cf7 new \cf3 View.OnClickListener() \{\
+            \cf11 @Override\
+            \cf7 public void \cf12 onClick\cf3 (View v) \{\
+\
+                Log.
+\f2\i e
+\f1\i0 (\cf4 "Error"\cf7 , \cf4 "onClick: Tag - 1 "\cf3 )\cf7 ;\
+\
+                \cf3 Dexter.
+\f2\i withActivity
+\f1\i0 (MainActivity.\cf7 this\cf3 )\
+                        .withPermission(Manifest.permission.
+\f2\i \cf6 SEND_SMS
+\f1\i0 \cf3 )\
+                        .withListener(\cf6 sendSMSPermissionListener\cf3 )\
+                        .check()\cf7 ;\
+                \cf3 Log.
+\f2\i e
+\f1\i0 (\cf4 "Error"\cf7 , \cf4 "onClick: Tag - 2 "\cf3 )\cf7 ;\
+\
+                \cf3 SmsManager smsManager = SmsManager.
+\f2\i getDefault
+\f1\i0 ()\cf7 ;\
+                \cf3 Log.
+\f2\i e
+\f1\i0 (\cf4 "Error"\cf7 , \cf4 "onClick: Tag - 3 "\cf3 )\cf7 ;\
+\
+                \cf3 String PhoneNumber = \cf6 edtPhoneNumber\cf3 .getText().toString()\cf7 ;\
+                \cf3 String messageText = \cf6 edtMessageText\cf3 .getText().toString()\cf7 ;\
+\
+                \cf3 smsManager.sendTextMessage(PhoneNumber\cf7 , null, \cf3 messageText\cf7 , null, null\cf3 )\cf7 ;\
+                \cf3 Log.
+\f2\i e
+\f1\i0 (\cf4 "Error"\cf7 , \cf4 "onClick: Tag - 4 "\cf3 )\cf7 ;\
+\
+                \cf6 txtViewStatus\cf3 .setText(\cf4 "Message Sent. . ."\cf3 )\cf7 ;\
+\
+            \cf3 \}\
+        \})\cf7 ;\
+\
+\
+    \cf3 \}\
+\
+\
+    \cf7 public void \cf12 createPermissionListner\cf3 ()\{\
+\
+        \cf7 if \cf3 (\cf6 sendSMSPermissionListener \cf3 == \cf7 null\cf3 )\{\
+\
+            \cf6 sendSMSPermissionListener \cf3 = \cf7 new \cf3 PermissionListener() \{\
+                \cf11 @Override\
+                \cf7 public void \cf12 onPermissionGranted\cf3 (PermissionGrantedResponse response) \{\
+\
+                \}\
+\
+                \cf11 @Override\
+                \cf7 public void \cf12 onPermissionDenied\cf3 (PermissionDeniedResponse response) \{\
+\
+                \}\
+\
+                \cf11 @Override\
+                \cf7 public void \cf12 onPermissionRationaleShouldBeShown\cf3 (PermissionRequest permission\cf7 , \cf3 PermissionToken token) \{\
+\
+                    token.continuePermissionRequest()\cf7 ;\
+\
+                \cf3 \}\
+            \}\cf7 ;\
+\
+        \cf3 \}\
+\
+    \}\
+\
+\}\
+\
+}
